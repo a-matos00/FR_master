@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="vxlapi_NET">
+      <HintPath>..\..\..\..\..\Public\Documents\Vector\XL Driver Library 20.30.14\bin\vxlapi_NET.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

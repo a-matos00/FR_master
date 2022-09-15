@@ -1,0 +1,39 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "WpfApp1/1.0.0": {
+        "dependencies": {
+          "vxlapi_NET": "9.7.1.13386"
+        },
+        "runtime": {
+          "WpfApp1.dll": {}
+        }
+      },
+      "vxlapi_NET/9.7.1.13386": {
+        "runtime": {
+          "vxlapi_NET.dll": {
+            "assemblyVersion": "9.7.1.13386",
+            "fileVersion": "9.7.1.13386"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "WpfApp1/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "vxlapi_NET/9.7.1.13386": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
