@@ -162,6 +162,7 @@ namespace WpfApp1
                 this.VerticalContentAlignment = VerticalAlignment.Center;
                 this.Width = 50;
                 this.Height = 50;
+                //promjena
             }
         }
 
