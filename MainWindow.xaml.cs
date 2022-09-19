@@ -26,7 +26,6 @@ namespace WpfApp1
     {
         canDevice device = new canDevice();
        
-
         public MainWindow()
         {
             InitializeComponent();
@@ -43,19 +42,21 @@ namespace WpfApp1
             senderWindow.Show();
         }
 
-       
-
         public void DisplayRxMsg(uint id, UInt64 timestamp, byte[] data)
         {
-            this.Dispatcher.Invoke(() => {
+            String dataString = "";
+
+            this.Dispatcher.Invoke(() =>
+            {
                 recieveDisplay.Text = id.ToString("X3") + " ";
-                for (int i = 0; i < 8; i++)
-                    recieveDisplay.Text += data[i];
+
+                for (int i = 0; i < 8; i += 2) {
+                dataString += Convert.ToHexString(data, i, 2);
+                }
+
+                recieveDisplay.Text += dataString;
             });
         }
-
-       
-
     }
 
  

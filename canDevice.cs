@@ -270,62 +270,24 @@ namespace WpfApp1
         /// Sends some CAN messages.
         /// </summary>
         // ----------------------------------------------------------------------------------------------- 
-        public void CANTransmitDemo(uint id)
-        {
-            XLDefine.XL_Status txStatus;
-
-            // Create an event collection with 2 messages (events)
-            XLClass.xl_event_collection xlEventCollection = new XLClass.xl_event_collection(2);
-
-            // event 1
-            xlEventCollection.xlEvent[0].tagData.can_Msg.id = id;
-            xlEventCollection.xlEvent[0].tagData.can_Msg.dlc = 8;
-            xlEventCollection.xlEvent[0].tagData.can_Msg.data[0] = 32;
-            xlEventCollection.xlEvent[0].tagData.can_Msg.data[1] = 2;
-            xlEventCollection.xlEvent[0].tagData.can_Msg.data[2] = 3;
-            xlEventCollection.xlEvent[0].tagData.can_Msg.data[3] = 4;
-            xlEventCollection.xlEvent[0].tagData.can_Msg.data[4] = 5;
-            xlEventCollection.xlEvent[0].tagData.can_Msg.data[5] = 6;
-            xlEventCollection.xlEvent[0].tagData.can_Msg.data[6] = 7;
-            xlEventCollection.xlEvent[0].tagData.can_Msg.data[7] = 8;
-            xlEventCollection.xlEvent[0].tag = XLDefine.XL_EventTags.XL_TRANSMIT_MSG;
-
-            // event 2
-            xlEventCollection.xlEvent[1].tagData.can_Msg.id = id;
-            xlEventCollection.xlEvent[1].tagData.can_Msg.dlc = 8;
-            xlEventCollection.xlEvent[1].tagData.can_Msg.data[0] = 9;
-            xlEventCollection.xlEvent[1].tagData.can_Msg.data[1] = 10;
-            xlEventCollection.xlEvent[1].tagData.can_Msg.data[2] = 11;
-            xlEventCollection.xlEvent[1].tagData.can_Msg.data[3] = 12;
-            xlEventCollection.xlEvent[1].tagData.can_Msg.data[4] = 13;
-            xlEventCollection.xlEvent[1].tagData.can_Msg.data[5] = 14;
-            xlEventCollection.xlEvent[1].tagData.can_Msg.data[6] = 15;
-            xlEventCollection.xlEvent[1].tagData.can_Msg.data[7] = 16;
-            xlEventCollection.xlEvent[1].tag = XLDefine.XL_EventTags.XL_TRANSMIT_MSG;
-
-
-            // Transmit events
-            txStatus = CanDriver.XL_CanTransmit(portHandle, txMask, xlEventCollection);
-            Trace.WriteLine("Transmit Message      : " + txStatus);
-        }
-        // -----------------------------------------------------------------------------------------------
-
-        public void TransmitMessage(uint id, uint[] data)
+       
+        public void TransmitMessage(uint id, byte[] data, int dlc)
         {
             XLDefine.XL_Status txStatus;
             XLClass.xl_event_collection xlEventCollection = new XLClass.xl_event_collection(1);
 
             xlEventCollection.xlEvent[0].tagData.can_Msg.id = id;
             xlEventCollection.xlEvent[0].tagData.can_Msg.dlc = 8;
-            xlEventCollection.xlEvent[0].tagData.can_Msg.data[0] = 32;
-            xlEventCollection.xlEvent[0].tagData.can_Msg.data[1] = 2;
-            xlEventCollection.xlEvent[0].tagData.can_Msg.data[2] = 3;
-            xlEventCollection.xlEvent[0].tagData.can_Msg.data[3] = 4;
-            xlEventCollection.xlEvent[0].tagData.can_Msg.data[4] = 5;
-            xlEventCollection.xlEvent[0].tagData.can_Msg.data[5] = 6;
-            xlEventCollection.xlEvent[0].tagData.can_Msg.data[6] = 7;
-            xlEventCollection.xlEvent[0].tagData.can_Msg.data[7] = 8;
+
+            for(int i = 0; i < dlc; i++)
+            {
+                xlEventCollection.xlEvent[0].tagData.can_Msg.data[i] = data[i];
+                Trace.WriteLine(data[i]);
+            }
             xlEventCollection.xlEvent[0].tag = XLDefine.XL_EventTags.XL_TRANSMIT_MSG;
+
+            txStatus = CanDriver.XL_CanTransmit(portHandle, txMask, xlEventCollection);
+            Trace.WriteLine("Transmit Message      : " + txStatus);
         }
 
 

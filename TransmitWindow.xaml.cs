@@ -12,20 +12,26 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using static WpfApp1.TransmitWindow;
+using System.Text.RegularExpressions;
 
 namespace WpfApp1
 {
 
     public partial class TransmitWindow : Window
     {
-        public canDevice transmitDevice;
+        public static canDevice transmitDevice ;
         const int TX_MESSAGE_COUNT = 6;
-        const int DATA_COLUMN_INDEX = 2;
+        const int DATA_COLUMN_INDEX = 2;    //column index of firtst data box in main grid
+        const int CAN_MSG_DATA_LENGTH = 8;
+        const int DATA_BOX_BYTE_LENGTH = 2;
+        const int MSG_ID_LENGTH = 3;
 
         TXmessage[] TXmessages = new TXmessage[TX_MESSAGE_COUNT];
         idTextBox[] idTextBoxes = new idTextBox[TX_MESSAGE_COUNT];
-        dataByteTextBox[] dataByteTextBoxes = new dataByteTextBox[60];
+        static dataByteTextBox[,] dataByteTextBoxes = new dataByteTextBox[TX_MESSAGE_COUNT, CAN_MSG_DATA_LENGTH];
         dataGrid[] dataGrids = new dataGrid[TX_MESSAGE_COUNT];
+        messageSelectButton[] messageSelectButtons = new messageSelectButton[TX_MESSAGE_COUNT];
 
         public TransmitWindow()
         {
@@ -34,11 +40,25 @@ namespace WpfApp1
             setupIdTextBoxes();
             setupDataGrids();
             generateDataIndexes();
+            generateMessageButtons();
+        }
 
+        public void initDataBoxes()
+        {
+            for(int i = 0; i < TX_MESSAGE_COUNT; i++)
+            {
+                for(int j = 0; j < 8; j++)
+                {
+                    dataByteTextBoxes[i, j] = new dataByteTextBox();
+                    dataByteTextBoxes[i, j].row = i;
+                    dataByteTextBoxes[i, j].column = j;
+                }
+            }
         }
 
         public void setupDataGrids()
         {
+            initDataBoxes();
             for (int i = 0; i < dataGrids.Length; i++)
             {
                 dataGrids[i] = new dataGrid();
@@ -50,11 +70,10 @@ namespace WpfApp1
 
                 for (int j = 0; j < 8; j++) {
                     dataGrids[i].ColumnDefinitions.Add(new ColumnDefinition());
-                    dataByteTextBoxes[j] = new dataByteTextBox();
-                    Grid.SetColumn(dataByteTextBoxes[j], j);
-                    Grid.SetRow(dataByteTextBoxes[j], 0);
-                    dataGrids[i].Children.Add(dataByteTextBoxes[j]);
-                    dataByteTextBoxes[j].Text = "00";
+                    Grid.SetColumn(dataByteTextBoxes[i,j], j);
+                    Grid.SetRow(dataByteTextBoxes[i,j], 0);
+                    dataGrids[i].Children.Add(dataByteTextBoxes[i,j]);
+                    dataByteTextBoxes[i,j].Text = "00";
                 }
             }
         }
@@ -79,13 +98,86 @@ namespace WpfApp1
             }
         }
 
+        public static void clearInputFieldOnClick(object sender, RoutedEventArgs e)
+        {
+            TextBox temp = null;
+            temp = (TextBox)sender;
+            temp.Text = "";
+        }
+
+        public static void dataBoxInputHandler(object sender, RoutedEventArgs e)
+        {
+            dataByteTextBox dataBox = null;
+            dataBox = (dataByteTextBox)sender;
+            if (new Regex(@"^[A-Fa-f0-9]*$").IsMatch(dataBox.Text) && dataBox.Text.Length < 3)
+            {
+                Trace.WriteLine("mATCHING");
+                if (dataBox.Text.Length == 2 && dataBox.column != 7)
+                {
+                    Keyboard.Focus(dataByteTextBoxes[dataBox.row, dataBox.column + 1]);
+                    dataByteTextBoxes[dataBox.row, dataBox.column + 1].Text = "";
+                }
+            }
+            else
+            {
+                dataBox.Text = dataBox.Text.Remove(dataBox.Text.Length - 1);
+            }
+            if (dataBox.Text.Length > DATA_BOX_BYTE_LENGTH)
+            {
+                dataBox.Text = dataBox.Text.Remove(dataBox.Text.Length - 1);
+            }
+
+                
+        }
+
+        public static void idBoxInputHandler(object sender, RoutedEventArgs e)
+        {
+            idTextBox inputField = (idTextBox)sender;
+            if (new Regex(@"^[A-Fa-f0-9]*$").IsMatch(inputField.Text) && inputField.Text.Length < 4)
+            {
+                if (inputField.Text.Length == 3)
+                {
+                    Keyboard.Focus(dataByteTextBoxes[inputField.row, 0]);
+                    dataByteTextBoxes[inputField.row, 0].Text = "";
+                }
+            }
+            else if (inputField.Text.Length > MSG_ID_LENGTH)
+            {
+                inputField.Text = inputField.Text.Remove(inputField.Text.Length - 1);
+            }
+
+        }
+
+        public static void dataBoxLostFocusHandler(object sender, RoutedEventArgs e)
+        {
+            dataByteTextBox dataBox = null;
+            dataBox = (dataByteTextBox)sender;
+            
+            if(dataBox.Text.Length == 0)
+            {
+                dataBox.Text = "00";
+            }
+        }
+
         public void SetCANDevice(canDevice device)
         {
             transmitDevice = device;
         }
 
+        public void generateMessageButtons()
+        {
+            for (int i = 0; i < TX_MESSAGE_COUNT; i++)
+            {
+                TXmessages[i].msgButton.Click += handleMessageButtonClick;
+                TXmessages[i].msgButton.Content = "Message " + (i + 1).ToString();
+                Grid.SetColumn(TXmessages[i].msgButton, 0);
+                Grid.SetRow(TXmessages[i].msgButton, i + 2);
 
-        public void colorChange(Button clickedButton)
+                windowGrid.Children.Add(TXmessages[i].msgButton);
+            }
+        }
+
+        public void buttonColorChange(messageSelectButton clickedButton)
         {
             if (clickedButton.Background == Brushes.Lime)
                 clickedButton.Background = Brushes.Red;
@@ -97,9 +189,19 @@ namespace WpfApp1
 
         public void handleMessageButtonClick(object sender, RoutedEventArgs e)
         {
-            Button clickedButton = null;
-            clickedButton = (Button)sender;
-            colorChange(clickedButton);
+            messageSelectButton clickedButton = null;
+            clickedButton = (messageSelectButton)sender;
+
+            if(clickedButton.parentReference.status == false)
+            {
+                clickedButton.parentReference.status = true;
+            }
+            else
+            {
+                clickedButton.parentReference.status = false;
+            }
+
+            buttonColorChange(clickedButton);
         }
 
         public void Transmit(object sender, RoutedEventArgs e)
@@ -108,17 +210,22 @@ namespace WpfApp1
 
             for (int i = 0; i < TX_MESSAGE_COUNT; i++)
             {
-                if(TXmessages[i].status == false) { break; }
-
-                for(int j = 0; j < 8; j++)
+                if(TXmessages[i].status == false)
                 {
-                    tempString = dataByteTextBoxes[j].Text;
-                    uint value = Convert.ToByte(tempString, 16);
+                    break;
+                }
+
+                TXmessages[i].id = Convert.ToUInt32(idTextBoxes[i].Text, 16);
+
+                for (int j = 0; j < 8; j++)
+                {
+                    tempString = dataByteTextBoxes[i,j].Text;
+                    byte value = Convert.ToByte(tempString, 16);
                     TXmessages[i].data[j] = value;
                     Trace.WriteLine(value);
                 }
 
-                //transmitDevice.TransmitMessage(TXmessages[i].id, TXmessages[i].data);
+                transmitDevice.TransmitMessage(TXmessages[i].id, TXmessages[i].data, 8);
             }
         }
 
@@ -147,60 +254,80 @@ namespace WpfApp1
                 Grid.SetColumn(temp, i);
                 Grid.SetRow(temp, 0);
                 indexGrid.Children.Add(temp);
-
             }
             
         }
-
-        public class idTextBox : TextBox
-        {
-            public idTextBox()
-            {
-                this.VerticalAlignment = VerticalAlignment.Center;
-                this.HorizontalAlignment = HorizontalAlignment.Center;
-                this.HorizontalContentAlignment = HorizontalAlignment.Center;
-                this.VerticalContentAlignment = VerticalAlignment.Center;
-                this.Width = 50;
-                this.Height = 50;
-                //promjena
-            }
-        }
-
-        public class dataByteTextBox : TextBox
-        {
-            public dataByteTextBox()
-            {   
-                this.HorizontalContentAlignment = HorizontalAlignment.Center;
-                this.VerticalContentAlignment = VerticalAlignment.Center;
-                this.Width = 30;
-                this.Height = 50;
-            }
-        }
-
-        public class dataGrid : Grid
-        {
-            public dataGrid()
-            {
-                this.Width = 240;
-                this.Height = 50;
-                
-            }
-        }
+        
     }
 
-    public class TXmessage
+    public class repetitionInput : TextBox
     {
-        public uint id = 0;
-        uint dlc = 0;
-        public uint[] data = new uint[] {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-        public uint interval = 10; //ms
-        public bool status = false;
-
-        public TXmessage() { }
-
-        public void setId(uint id) { this.id = id; }
-        public uint getId() { return id; }
+        public repetitionInput()
+        {
+            this.Width = 50;
+            this.Height = 50;
+            this.VerticalAlignment = VerticalAlignment.Center;
+            this.HorizontalAlignment = HorizontalAlignment.Center;
+            this.HorizontalContentAlignment = HorizontalAlignment.Center;
+            this.VerticalContentAlignment = VerticalAlignment.Center;
+        }
     }
 
+    public class idTextBox : TextBox
+    {
+        public int row = 0;
+        public int column = 0;
+        public idTextBox()
+        {
+            this.VerticalAlignment = VerticalAlignment.Center;
+            this.HorizontalAlignment = HorizontalAlignment.Center;
+            this.HorizontalContentAlignment = HorizontalAlignment.Center;
+            this.VerticalContentAlignment = VerticalAlignment.Center;
+            this.Width = 50;
+            this.Height = 50;
+            this.PreviewMouseDown += TransmitWindow.clearInputFieldOnClick;
+            this.KeyUp += TransmitWindow.idBoxInputHandler;
+        }
+    }
 
+    public class dataByteTextBox : TextBox
+    {
+        public int row = 0;
+        public int column = 0;
+        public dataByteTextBox()
+        {
+            this.HorizontalContentAlignment = HorizontalAlignment.Center;
+            this.VerticalContentAlignment = VerticalAlignment.Center;
+            this.Width = 30;
+            this.Height = 50;
+            this.PreviewMouseDown += TransmitWindow.clearInputFieldOnClick;
+            this.KeyUp += TransmitWindow.dataBoxInputHandler;
+            this.LostFocus += TransmitWindow.dataBoxLostFocusHandler;
+        }
+
+
+    }
+
+    public class dataGrid : Grid
+    {
+        public dataGrid()
+        {
+            this.Width = 240;
+            this.Height = 50;
+        }
+    }
+
+   
+
+    public class messageSelectButton : Button
+    {
+        public TXmessage parentReference = null;
+        public messageSelectButton()
+        {
+            this.Width = 100;
+            this.Background = Brushes.Red;
+        }
+    }
+
+    
 }
