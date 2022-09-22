@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET6_0;NETCOREAPP
 C:\Users\andri\source\repos\WpfApp1\WpfApp1\App.xaml
-2-1060082306
+3-313893516
 
-61844468175
+7-1081820812
 1951494545613
-MainWindow.xaml;TransmitWindow.xaml;
+BusMonitorWindow.xaml;MainWindow.xaml;TransmitWindow.xaml;
 
 False
 

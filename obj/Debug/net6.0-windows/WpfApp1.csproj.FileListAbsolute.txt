@@ -24,3 +24,5 @@ C:\Users\andri\source\repos\WpfApp1\WpfApp1\obj\Debug\net6.0-windows\WpfApp1.csp
 C:\Users\andri\source\repos\WpfApp1\WpfApp1\obj\Debug\net6.0-windows\TransmitWindow.g.cs
 C:\Users\andri\source\repos\WpfApp1\WpfApp1\obj\Debug\net6.0-windows\WpfApp1_MarkupCompile.lref
 C:\Users\andri\source\repos\WpfApp1\WpfApp1\obj\Debug\net6.0-windows\TransmitWindow.baml
+C:\Users\andri\source\repos\WpfApp1\WpfApp1\obj\Debug\net6.0-windows\BusMonitorWindow.g.cs
+C:\Users\andri\source\repos\WpfApp1\WpfApp1\obj\Debug\net6.0-windows\BusMonitorWindow.baml

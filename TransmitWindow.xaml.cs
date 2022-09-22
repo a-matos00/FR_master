@@ -14,13 +14,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using static WpfApp1.TransmitWindow;
 using System.Text.RegularExpressions;
+using static WpfApp1.MainWindow;
 
 namespace WpfApp1
 {
 
     public partial class TransmitWindow : Window
     {
-        public static canDevice transmitDevice ;
+        public static canDevice transmitDevice;
         const int TX_MESSAGE_COUNT = 6;
         const int DATA_COLUMN_INDEX = 2;    //column index of firtst data box in main grid
         const int CAN_MSG_DATA_LENGTH = 8;
@@ -40,7 +41,7 @@ namespace WpfApp1
             setupIdTextBoxes();
             setupDataGrids();
             generateDataIndexes();
-            generateMessageButtons();
+            generateMessageButtons();           
         }
 
         public void initDataBoxes()
@@ -210,22 +211,23 @@ namespace WpfApp1
 
             for (int i = 0; i < TX_MESSAGE_COUNT; i++)
             {
-                if(TXmessages[i].status == false)
+                if (TXmessages[i].status == false) { }
+
+                else
                 {
-                    break;
+
+                    TXmessages[i].id = Convert.ToUInt32(idTextBoxes[i].Text, 16);
+
+                    for (int j = 0; j < 8; j++)
+                    {
+                        tempString = dataByteTextBoxes[i, j].Text;
+                        byte value = Convert.ToByte(tempString, 16);
+                        TXmessages[i].data[j] = value;
+
+                    }
+
+                    transmitDevice.TransmitMessage(TXmessages[i].id, TXmessages[i].data, 8);
                 }
-
-                TXmessages[i].id = Convert.ToUInt32(idTextBoxes[i].Text, 16);
-
-                for (int j = 0; j < 8; j++)
-                {
-                    tempString = dataByteTextBoxes[i,j].Text;
-                    byte value = Convert.ToByte(tempString, 16);
-                    TXmessages[i].data[j] = value;
-                    Trace.WriteLine(value);
-                }
-
-                transmitDevice.TransmitMessage(TXmessages[i].id, TXmessages[i].data, 8);
             }
         }
 

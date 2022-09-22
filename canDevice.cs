@@ -7,14 +7,11 @@ using vxlapi_NET;
 using System.Threading;
 using Microsoft.Win32.SafeHandles;
 using System.Diagnostics;
-//using static WpfApp1.MainWindow;
 
 namespace WpfApp1
 {
     public class canDevice
     {
-
-
         public delegate void RxEventHandler(uint id, UInt64 timestamp, byte[] data);
         public event RxEventHandler RxEvent; // event
         // -----------------------------------------------------------------------------------------------

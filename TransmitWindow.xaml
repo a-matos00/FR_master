@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
-        Title="TransmitWindow" Height="450" Width="800"
-        Top="0" Left="700">
+        Title="TransmitWindow" Height="450" Width="550"
+        Top="0" Left="1000">
     
 
     <Grid Name="windowGrid">
@@ -32,7 +32,7 @@
 
         <Rectangle Grid.Row="0" Height="50" Fill="Black" Margin="0,0,-94,0" Grid.ColumnSpan="6"/>
         <Rectangle Grid.Row="1" Height="50" Fill="Gray" Margin="0,0,-10,0" Grid.ColumnSpan="6"/>
-        <TextBlock Foreground="White" Text="Transmit Window" HorizontalAlignment="Left" Width="108" Grid.Column="4" Margin="202,0,0,0" Grid.ColumnSpan="2"/>
+        <TextBlock Foreground="White" Text="Transmit Window" HorizontalAlignment="Left" Width="108" Grid.Column="4" Grid.ColumnSpan="2"/>
      
         <Button Click="Transmit" Grid.Row="1" Grid.Column="4" Width="100">Transmit</Button>
         <TextBlock Text="ID" Grid.Column="1" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>

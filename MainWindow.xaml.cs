@@ -14,7 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Diagnostics;
 using System.Threading;
-
+using System.ComponentModel;
 
 
 namespace WpfApp1
@@ -24,39 +24,50 @@ namespace WpfApp1
     /// </summary>
     public partial class MainWindow : Window
     {
-        canDevice device = new canDevice();
-       
+        static canDevice device = new canDevice();
+        TransmitWindow transmitWindow = null;
+        BusMonitorWindow monitorWindow = null;
+
         public MainWindow()
         {
             InitializeComponent();
-            device.RxEvent += DisplayRxMsg;
-            device.initCanDriver();
-            device.rxThread = new Thread(new ThreadStart(device.RXThread));
-            device.rxThread.Start();
+            
+        }
+
+        public void OnMonitorWindowClosing(object sender, CancelEventArgs e)
+        {
+            monitorWindow = null;
+            Trace.WriteLine("cLOSED WINDOW");
+        }
+
+        public void OnTransmitWindowClosing(object sender, CancelEventArgs e)
+        {
+            transmitWindow = null;
+            Trace.WriteLine("cLOSED WINDOW");
         }
 
         public void OpenTransmitWindow(object sender, RoutedEventArgs e)
         {
-            TransmitWindow senderWindow = new TransmitWindow();
-            senderWindow.SetCANDevice(device);
-            senderWindow.Show();
-        }
-
-        public void DisplayRxMsg(uint id, UInt64 timestamp, byte[] data)
-        {
-            String dataString = "";
-
-            this.Dispatcher.Invoke(() =>
+            if (transmitWindow == null) //prevents opening multiple windows
             {
-                recieveDisplay.Text = id.ToString("X3") + " ";
-
-                for (int i = 0; i < 8; i += 2) {
-                dataString += Convert.ToHexString(data, i, 2);
-                }
-
-                recieveDisplay.Text += dataString;
-            });
+                transmitWindow = new TransmitWindow();
+                transmitWindow.SetCANDevice(device);
+                transmitWindow.Show();
+                transmitWindow.Closing += OnTransmitWindowClosing;
+            }
         }
+
+        public void OpenMonitorWindow(object sender, RoutedEventArgs e)
+        {
+            if (monitorWindow == null) //prevents opening multiple windows
+            {
+                monitorWindow = new BusMonitorWindow(device);
+                monitorWindow.Show();
+                monitorWindow.Closing += OnMonitorWindowClosing;
+            }
+        }
+
+
     }
 
  
