@@ -22,8 +22,7 @@ namespace WpfApp1
     /// <summary>
     /// Interaction logic for BusMonitorWindow.xaml
     /// </summary>
-    /// 
-   
+    ///   
     public partial class BusMonitorWindow : Window
     {
         const int MAIN_GRID_ROW_COUNT = 3;
@@ -31,23 +30,30 @@ namespace WpfApp1
 
         public static canDevice device;
         private System.Data.DataSet dataSet;
-        RXmessage[] RXmessages = null;
+        RXmessage[] RXmessages;
 
-        DataGridTextColumn idColumn = null;
-        DataGridTextColumn dataColumn = null;
-        DataGridTextColumn timestampColumn = null;
+        DataGridTextColumn idColumn;
+        DataGridTextColumn dataColumn;
+        DataGridTextColumn timestampColumn;
         public BusMonitorWindow(canDevice a_device)
         {
-            InitializeComponent();
-            initMainGrid();
-            device = a_device;
-            device.RxEvent += DisplayRxMsg;
-            device.initCanDriver();
-            device.rxThread = new Thread(new ThreadStart(device.RXThread));
-            device.rxThread.Start();
+            if (a_device == null)
+            {
+                throw new ArgumentNullException();
+            }
+            else
+            {
+                InitializeComponent();
+                initMainGrid();
+                device = a_device;
+                device.RxEvent += DisplayRxMsg;
+                device.initCanDriver();
+                device.rxThread = new Thread(new ThreadStart(device.RXThread));
+                device.rxThread.Start();
+            }
         }
 
-        public void DisplayRxMsg(uint id, UInt64 timestamp, byte[] data)
+        public void DisplayRxMsg(uint id, string timestamp, byte[] data)
         {
 
             this.Dispatcher.Invoke(() =>
@@ -107,27 +113,27 @@ namespace WpfApp1
     {
         public uint id = 0;
         uint dlc { get; set; }
-        public UInt64 timestamp = 0;
+        public string timestamp = "";
         public byte[] data = new byte[] { 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
-        public RXmessage(UInt64 a_timestamp, uint a_id)
+        public RXmessage(string a_timestamp, uint a_id)
         {
             timestamp = a_timestamp;
             id = a_id;
         }
 
-        public UInt64 TIMESTAMP
+        public string TIMESTAMP
         {
             get
             {
                 return timestamp;
             }
         }
-        public uint ID
+        public string ID
         {
             get
             {
-                return id;
+                return id.ToString("X3"); ;
             }
         }
 

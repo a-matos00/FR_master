@@ -10,12 +10,18 @@
     <Compile Update="BusMonitorWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="DiagnosticWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="TransmitWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Update="BusMonitorWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="DiagnosticWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="MainWindow.xaml">

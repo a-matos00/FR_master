@@ -12,7 +12,7 @@ namespace WpfApp1
 {
     public class canDevice
     {
-        public delegate void RxEventHandler(uint id, UInt64 timestamp, byte[] data);
+        public delegate void RxEventHandler(uint id, string timestamp, byte[] data);
         public event RxEventHandler RxEvent; // event
         // -----------------------------------------------------------------------------------------------
         // Global variables
@@ -51,8 +51,9 @@ namespace WpfApp1
 
         public void handleReceivedMsg(XLClass.xl_event receivedEvent)
         {
+            string timestamp = DateTime.Now.ToString("h:mm:ss.ff tt");
             statusString = CanDriver.XL_GetEventString(receivedEvent);
-            RxEvent?.Invoke(receivedEvent.tagData.can_Msg.id, receivedEvent.timeStamp, receivedEvent.tagData.can_Msg.data);
+            RxEvent?.Invoke(receivedEvent.tagData.can_Msg.id, timestamp, receivedEvent.tagData.can_Msg.data);
         }
 
         // -----------------------------------------------------------------------------------------------

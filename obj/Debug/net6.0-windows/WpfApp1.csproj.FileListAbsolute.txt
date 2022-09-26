@@ -26,3 +26,5 @@ C:\Users\andri\source\repos\WpfApp1\WpfApp1\obj\Debug\net6.0-windows\WpfApp1_Mar
 C:\Users\andri\source\repos\WpfApp1\WpfApp1\obj\Debug\net6.0-windows\TransmitWindow.baml
 C:\Users\andri\source\repos\WpfApp1\WpfApp1\obj\Debug\net6.0-windows\BusMonitorWindow.g.cs
 C:\Users\andri\source\repos\WpfApp1\WpfApp1\obj\Debug\net6.0-windows\BusMonitorWindow.baml
+C:\Users\andri\source\repos\WpfApp1\WpfApp1\obj\Debug\net6.0-windows\diagnosticWindow.g.cs
+C:\Users\andri\source\repos\WpfApp1\WpfApp1\obj\Debug\net6.0-windows\diagnosticWindow.baml

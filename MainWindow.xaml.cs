@@ -27,30 +27,34 @@ namespace WpfApp1
         static canDevice device = new canDevice();
         TransmitWindow transmitWindow = null;
         BusMonitorWindow monitorWindow = null;
+        DiagnosticWindow diagnosticWindow = null;
 
         public MainWindow()
         {
-            InitializeComponent();
-            
+            InitializeComponent();      
         }
 
         public void OnMonitorWindowClosing(object sender, CancelEventArgs e)
         {
             monitorWindow = null;
-            Trace.WriteLine("cLOSED WINDOW");
         }
 
         public void OnTransmitWindowClosing(object sender, CancelEventArgs e)
         {
             transmitWindow = null;
-            Trace.WriteLine("cLOSED WINDOW");
         }
 
-        public void OpenTransmitWindow(object sender, RoutedEventArgs e)
+        public void OnDiagnosticWindowClosing(object sender, CancelEventArgs e)
+        {
+            diagnosticWindow = null;
+        }
+
+        //handle button click
+        public void OpenTransmitWindow(object sender, RoutedEventArgs e)   
         {
             if (transmitWindow == null) //prevents opening multiple windows
             {
-                transmitWindow = new TransmitWindow();
+                transmitWindow = new TransmitWindow(device);
                 transmitWindow.SetCANDevice(device);
                 transmitWindow.Show();
                 transmitWindow.Closing += OnTransmitWindowClosing;
@@ -67,7 +71,15 @@ namespace WpfApp1
             }
         }
 
-
+        public void OpenDiagnosticWindow(object sender, RoutedEventArgs e)
+        {
+            if (diagnosticWindow == null) //prevents opening multiple windows
+            {
+                diagnosticWindow = new DiagnosticWindow();
+                diagnosticWindow.Show();
+                diagnosticWindow.Closing += OnDiagnosticWindowClosing;
+            }
+        }
     }
 
  

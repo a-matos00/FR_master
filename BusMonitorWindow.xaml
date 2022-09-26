@@ -11,7 +11,6 @@
     <Grid x:Name="mainGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="50"></RowDefinition>
-            <RowDefinition Height="25"></RowDefinition>
             <RowDefinition Height="300"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -19,25 +18,7 @@
         </Grid.ColumnDefinitions>
         <Rectangle Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch"  Fill="Black" Height="50"/>
         <TextBlock Text="Bus Monitor" Width="80" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="White"/>
-
-        <Grid x:Name="labelGrid" Grid.Row="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="25"></RowDefinition>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="50"></ColumnDefinition>
-                <ColumnDefinition Width="50"></ColumnDefinition>
-                <ColumnDefinition Width="100"></ColumnDefinition>
-                <ColumnDefinition Width="200"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <Rectangle Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" HorizontalAlignment="Stretch"  Fill="Gray"/>
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="Time"></TextBlock>
-            <TextBlock Grid.Row="0" Grid.Column="1" Text="ID"></TextBlock>
-            <TextBlock Grid.Row="0" Grid.Column="2" Text="Data"></TextBlock>
-        </Grid>
-
         <DataGrid x:Name="monitorDataGrid" Grid.Row="2" ItemsSource="{Binding}">
-            
         </DataGrid>
     </Grid>
 </Window>
