@@ -45,13 +45,13 @@ namespace WpfApp1
                 InitializeComponent();
                 initTXmessages();
                 setupIdTextBoxes();
-                setupDataGrids();
+                initDataBoxes();
                 generateDataIndexes();
                 generateMessageButtons();
             }
         }
 
-        public void initDataBoxes()
+        public void initDataBoxes() //optimize this function
         {
             for(int i = 0; i < TX_MESSAGE_COUNT; i++)
             {
@@ -62,18 +62,15 @@ namespace WpfApp1
                     dataByteTextBoxes[i, j].column = j;
                 }
             }
-        }
 
-        public void setupDataGrids()
-        {
-            initDataBoxes();
             for (int i = 0; i < dataGrids.Length; i++)
             {
-                for (int j = 0; j < 8; j++) {
-                    Grid.SetColumn(dataByteTextBoxes[i,j], j + DATA_COLUMN_INDEX);
-                    Grid.SetRow(dataByteTextBoxes[i,j], i);
-                    inputGrid.Children.Add(dataByteTextBoxes[i,j]);
-                    dataByteTextBoxes[i,j].Text = "00";
+                for (int j = 0; j < 8; j++)
+                {
+                    Grid.SetColumn(dataByteTextBoxes[i, j], j + DATA_COLUMN_INDEX);
+                    Grid.SetRow(dataByteTextBoxes[i, j], i);
+                    inputGrid.Children.Add(dataByteTextBoxes[i, j]);
+                    dataByteTextBoxes[i, j].Text = "00";
                 }
             }
         }
@@ -204,7 +201,7 @@ namespace WpfApp1
         {
             messageSelectButton clickedButton = null;
             clickedButton = (messageSelectButton)sender;
-
+         
             if(clickedButton.parentReference.status == false)
             {
                 clickedButton.parentReference.status = true;
@@ -261,7 +258,7 @@ namespace WpfApp1
         
     }
 
-    public class repetitionInput : TextBox
+    public class repetitionInput : TextBox  //pending implementation
     {
         public repetitionInput()
         {
@@ -304,8 +301,6 @@ namespace WpfApp1
             this.KeyUp += TransmitWindow.dataBoxInputHandler;
             this.LostFocus += TransmitWindow.dataBoxLostFocusHandler;
         }
-
-
     }
 
     public class dataGrid : Grid

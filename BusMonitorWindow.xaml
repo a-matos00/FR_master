@@ -17,7 +17,7 @@
             <ColumnDefinition Width="400"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Rectangle Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch"  Fill="Black" Height="50"/>
-        <TextBlock Text="Bus Monitor" Width="80" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="White"/>
+        <TextBlock Text="Bus Monitor" Width="100" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="White"/>
         <DataGrid x:Name="monitorDataGrid" Grid.Row="2" ItemsSource="{Binding}">
         </DataGrid>
     </Grid>

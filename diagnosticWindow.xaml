@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="DiagnosticWindow" Height="1080" Width="1920" Top="0" Left="0">
     <Grid>
+        <Button x:Name="addNewDataButton" Click="OpenDataSetupWindow" Content="Add" Width="100" Height="50"/>
         
     </Grid>
 </Window>

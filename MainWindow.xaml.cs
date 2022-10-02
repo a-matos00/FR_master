@@ -75,7 +75,7 @@ namespace WpfApp1
         {
             if (diagnosticWindow == null) //prevents opening multiple windows
             {
-                diagnosticWindow = new DiagnosticWindow();
+                diagnosticWindow = new DiagnosticWindow(device);
                 diagnosticWindow.Show();
                 diagnosticWindow.Closing += OnDiagnosticWindowClosing;
             }

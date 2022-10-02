@@ -19,9 +19,25 @@ namespace WpfApp1
     /// </summary>
     public partial class DiagnosticWindow : Window
     {
-        public DiagnosticWindow()
+        public static canDevice device;
+        public DataSetupWindow setupWindow = null;
+        public DiagnosticWindow(canDevice a_device)
         {
+            device = a_device;
             InitializeComponent();
         }
+
+        public void OpenDataSetupWindow(object sender, RoutedEventArgs e)
+        {  
+                if (setupWindow == null) //prevents opening multiple windows
+                {
+                    setupWindow = new DataSetupWindow();
+                    setupWindow.Show();
+                    //setupWindow.Closing += DataSetupWindowClosing;
+                }
+            
+        }
     }
+
+
 }
